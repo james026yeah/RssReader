@@ -1,4 +1,0 @@
-RssReader
-=========
-
-my rss reader
