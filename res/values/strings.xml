@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="rss_layout_urltext_text">http://rss.slashdot.org/Slashdot/slashdot</string>
-    <string name="rss_layout_statustext_text"></string>
-    <string name="rss_layout_download_text">Download</string>
-
-</resources>
