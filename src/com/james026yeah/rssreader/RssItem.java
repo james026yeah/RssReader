@@ -1,4 +1,4 @@
-package com.example.android.rssreader;
+package com.james026yeah.rssreader;
 
 /**
  * Simple struct class to hold the data for one rss item --

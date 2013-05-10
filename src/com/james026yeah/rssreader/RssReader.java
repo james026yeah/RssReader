@@ -1,7 +1,9 @@
-package com.example.android.rssreader;
+package com.james026yeah.rssreader;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+
+import com.example.android.rssreader.R;
 
 import android.app.ListActivity;
 import android.content.Context;
