@@ -1,4 +1,4 @@
-package com.james026yeah.rssreader;
+package com.james026yeah.rssreader.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +9,11 @@ import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+
+import com.james026yeah.rssreader.R;
+import com.james026yeah.rssreader.RssItem;
+import com.james026yeah.rssreader.R.id;
+import com.james026yeah.rssreader.R.layout;
 
 import android.app.Activity;
 import android.app.ListActivity;

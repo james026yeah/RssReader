@@ -1,20 +1,36 @@
 package com.james026yeah.rssreader.ui;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageView;
+import android.os.Handler;
+
+import com.james026yeah.rssreader.R;
 
 public class LoadingActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		ImageView image = new ImageView(getApplicationContext());
-		image.setBackgroundColor(Color.GREEN);
-		addContentView(image, new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+		setContentView(R.layout.loading_layout);
+	}
+	
+	Handler mHandle = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+		Intent intent = new Intent(getApplicationContext(), RssReader.class);
+		startActivity(intent);
+		finish();
+		};
+	};
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mHandle.sendEmptyMessageDelayed(1, 2000);
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
 	}
 	
 }
