@@ -11,5 +11,6 @@
             </intent-filter>
 		</activity>
         <activity android:name=".ui.RssReader"/>
+        <activity android:name=".ui.ReadingActivity"></activity>
   </application>
 </manifest>

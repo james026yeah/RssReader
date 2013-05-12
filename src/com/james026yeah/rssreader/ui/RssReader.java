@@ -36,85 +36,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TwoLineListItem;
 
-/**
- * The RssReader example demonstrates forking off a thread to download
- * rss data in the background and post the results to a ListView in the UI.
- * It also shows how to display custom data in a ListView
- * with a ArrayAdapter subclass.
- * 
- * <ul>
- * <li>We own a ListView
- * <li>The ListView uses our custom RSSListAdapter which 
- * <ul>
- * <li>The adapter feeds data to the ListView
- * <li>Override of getView() in the adapter provides the display view
- * used for selected list items
- * </ul>
- * <li>Override of onListItemClick() creates an intent to open the url for that
- * RssItem in the browser.
- * <li>Download = fork off a worker thread
- * <li>The worker thread opens a network connection for the rss data
- * <li>Uses XmlPullParser to extract the rss item data
- * <li>Uses mHandler.post() to send new RssItems to the UI
- * <li>Supports onSaveInstanceState()/onRestoreInstanceState() to save list/selection state on app
- * pause, so can resume seamlessly
- * </ul>
- */
 public class RssReader extends ListActivity {
-    /**
-     * Custom list adapter that fits our rss data into the list.
-     */
     private RSSListAdapter mAdapter;
-    
-    /**
-     * Url edit text field.
-     */
     private EditText mUrlText;
-
-    /**
-     * Status text field.
-     */
     private TextView mStatusText;
-
-    /**
-     * Handler used to post runnables to the UI thread.
-     */
     private Handler mHandler;
-
-    /**
-     * Currently running background network thread.
-     */
     private RSSWorker mWorker;
-
-    // Take this many chars from the front of the description.
     public static final int SNIPPET_LENGTH = 90;
     
-    
-    // Keys used for data in the onSaveInstanceState() Map.
     public static final String STRINGS_KEY = "strings";
-
     public static final String SELECTION_KEY = "selection";
-
     public static final String URL_KEY = "url";
-    
     public static final String STATUS_KEY = "status";
 
-    /**
-     * Called when the activity starts up. Do activity initialization
-     * here, not in a constructor.
-     * 
-     * @see Activity#onCreate
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.rss_layout);
-        // The above layout contains a list id "android:list"
-        // which ListActivity adopts as its list -- we can
-        // access it with getListView().
 
-        // Install our custom RSSListAdapter.
         List<RssItem> items = new ArrayList<RssItem>();
         mAdapter = new RSSListAdapter(this, items);
         getListView().setAdapter(mAdapter);
@@ -206,7 +146,9 @@ public class RssReader extends ListActivity {
         RssItem item = mAdapter.getItem(position);
 
         // Creates and starts an intent to open the item.link url.
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getLink().toString()));
+//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getLink().toString()));
+        Intent intent = new Intent(getApplicationContext(), ReadingActivity.class);
+        intent.putExtra("url", item.getLink());
         startActivity(intent);
     }
 
@@ -329,11 +271,11 @@ public class RssReader extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        menu.add(0, 0, 0, "Slashdot")
-            .setOnMenuItemClickListener(new RSSMenu("http://rss.slashdot.org/Slashdot/slashdot"));
+        menu.add(0, 0, 0, "新闻要闻")
+            .setOnMenuItemClickListener(new RSSMenu("http://rss.sina.com.cn/news/marquee/ddt.xml"));
 
-        menu.add(0, 0, 0, "Google News")
-            .setOnMenuItemClickListener(new RSSMenu("http://news.google.com/?output=rss"));
+        menu.add(0, 0, 0, "真情时刻")
+            .setOnMenuItemClickListener(new RSSMenu("http://rss.sina.com.cn/news/society/feeling15.xml"));
         
         menu.add(0, 0, 0, "News.com")
             .setOnMenuItemClickListener(new RSSMenu("http://news.com.com/2547-1_3-0-20.xml"));
@@ -351,12 +293,7 @@ public class RssReader extends ListActivity {
 
         return true;
     }
-
-    /**
-     * Puts text in the url text field and gives it focus. Used to make a Runnable
-     * for each menu item. This way, one inner class works for all items vs. an
-     * anonymous inner class for each menu item.
-     */
+    
     private class RSSMenu implements MenuItem.OnMenuItemClickListener {
         private CharSequence mUrl;
 
@@ -392,13 +329,8 @@ public class RssReader extends ListActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Make a List of all the RssItem data for saving
-        // NOTE: there may be a way to save the RSSItems directly,
-        // rather than their string data.
         int count = mAdapter.getCount();
 
-        // Save out the items as a flat list of CharSequence objects --
-        // title0, link0, descr0, title1, link1, ...
         ArrayList<CharSequence> strings = new ArrayList<CharSequence>();
         for (int i = 0; i < count; i++) {
             RssItem item = mAdapter.getItem(i);
@@ -408,15 +340,12 @@ public class RssReader extends ListActivity {
         }
         outState.putSerializable(STRINGS_KEY, strings);
 
-        // Save current selection index (if focussed)
         if (getListView().hasFocus()) {
             outState.putInt(SELECTION_KEY, Integer.valueOf(getListView().getSelectedItemPosition()));
         }
 
-        // Save url
         outState.putString(URL_KEY, mUrlText.getText().toString());
         
-        // Save status
         outState.putCharSequence(STATUS_KEY, mStatusText.getText());
     }
 
@@ -460,14 +389,6 @@ public class RssReader extends ListActivity {
 
     
     
-    /**
-     * Does rudimentary RSS parsing on the given stream and posts rss items to
-     * the UI as they are found. Uses Android's XmlPullParser facility. This is
-     * not a production quality RSS parser -- it just does a basic job of it.
-     * 
-     * @param in stream to read
-     * @param adapter adapter for ui events
-     */
     void parseRSS(InputStream in, RSSListAdapter adapter) throws IOException,
             XmlPullParserException {
         // TODO: switch to sax

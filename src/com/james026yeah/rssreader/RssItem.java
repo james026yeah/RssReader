@@ -1,18 +1,26 @@
 package com.james026yeah.rssreader;
 
+import android.graphics.Bitmap;
+
 /**
  * Simple struct class to hold the data for one rss item --
  * title, link, description.
  */
 public class RssItem  {
-    private CharSequence mTitle;
-    private CharSequence mLink;
-    private CharSequence mDescription;
+	public static final String mIconName = "favicon.ico";
+	
+    private CharSequence mTitle;        //====>The title of the item. 
+    private CharSequence mLink;         //====>The URL of the item. 
+    private CharSequence mDescription;  //====>The item synopsis.
+    private CharSequence mAuthor;       //====>Email address of the author of the item.
+    private CharSequence mImgTitle;
+    private String mImgURL;
     
     public RssItem() {
         mTitle = "";
         mLink = "";
         mDescription = "";
+        mImgURL = "";
     }
     
     public RssItem(CharSequence title, CharSequence link, CharSequence description) {
