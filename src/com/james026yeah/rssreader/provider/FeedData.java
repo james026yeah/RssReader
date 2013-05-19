@@ -142,32 +142,32 @@ public class FeedData {
 	
 	public static synchronized void deletePicturesOfFeed(Context context, Uri entriesUri, String selection) {
 		if (FeedDataContentProvider.IMAGEFOLDER_FILE.exists()) {
-			PictureFilenameFilter filenameFilter = new PictureFilenameFilter();
+//			PictureFilenameFilter filenameFilter = new PictureFilenameFilter();
 			
 			Cursor cursor = context.getContentResolver().query(entriesUri, IDPROJECTION, selection, null, null);
 			
 			while (cursor.moveToNext()) {
-				filenameFilter.setEntryId(cursor.getString(0));
+//				filenameFilter.setEntryId(cursor.getString(0));
 				
-				File[] files = FeedDataContentProvider.IMAGEFOLDER_FILE.listFiles(filenameFilter);
+//				File[] files = FeedDataContentProvider.IMAGEFOLDER_FILE.listFiles(filenameFilter);
 				
-				for (int n = 0, i = files != null ? files.length : 0; n < i; n++) {
-					files[n].delete();
-				}
+//				for (int n = 0, i = files != null ? files.length : 0; n < i; n++) {
+//					files[n].delete();
+//				}
 			}
-			cursor.close();
+//			cursor.close();
 		}
 	}
 	
 	public static synchronized void deletePicturesOfEntry(String entryId) {
 		if (FeedDataContentProvider.IMAGEFOLDER_FILE.exists()) {
-			PictureFilenameFilter filenameFilter = new PictureFilenameFilter(entryId);
+//			PictureFilenameFilter filenameFilter = new PictureFilenameFilter(entryId);
 			
-			File[] files = FeedDataContentProvider.IMAGEFOLDER_FILE.listFiles(filenameFilter);
+//			File[] files = FeedDataContentProvider.IMAGEFOLDER_FILE.listFiles(filenameFilter);
 			
-			for (int n = 0, i = files != null ? files.length : 0; n < i; n++) {
-				files[n].delete();
-			}
+//			for (int n = 0, i = files != null ? files.length : 0; n < i; n++) {
+//				files[n].delete();
+//			}
 		}
 	}
 	

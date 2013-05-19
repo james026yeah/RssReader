@@ -43,9 +43,7 @@ import java.util.Date;
 import java.util.zip.GZIPInputStream;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -61,6 +59,7 @@ import android.preference.PreferenceManager;
 import android.util.Xml;
 
 import com.james026yeah.rssreader.R;
+import com.james026yeah.rssreader.provider.FeedData;
 import com.james026yeah.rssreader.utils.Strings;
 
 public class FetcherService extends IntentService {
@@ -113,11 +112,11 @@ public class FetcherService extends IntentService {
 	@Override
 	public synchronized void onHandleIntent(Intent intent) {
 		if (preferences == null) {
-			try {
+//			try {
 //				preferences = PreferenceManager.getDefaultSharedPreferences(createPackageContext(Strings.PACKAGE, 0));
-			} catch (NameNotFoundException e) {
-				preferences = PreferenceManager.getDefaultSharedPreferences(FetcherService.this);
-			}
+//			} catch (NameNotFoundException e) {
+//				preferences = PreferenceManager.getDefaultSharedPreferences(FetcherService.this);
+//			}
 		}
 		
 		if (intent.getBooleanExtra(Strings.SCHEDULED, false)) {
@@ -151,7 +150,7 @@ public class FetcherService extends IntentService {
 					newCount = cursor.getInt(0);
 					cursor.close();
 					
-					String text = new StringBuilder().append(newCount).append(' ').append(getString(R.string.newentries)).toString();
+//					String text = new StringBuilder().append(newCount).append(' ').append(getString(R.string.newentries)).toString();
 					
 //					Notification notification = new Notification(R.drawable.ic_statusbar_rss, text, System.currentTimeMillis());
 					
@@ -169,13 +168,13 @@ public class FetcherService extends IntentService {
 					
 					String ringtone = preferences.getString(Strings.SETTINGS_NOTIFICATIONSRINGTONE, null);
 					
-					if (ringtone != null && ringtone.length() > 0) {
-						notification.sound = Uri.parse(ringtone);
-					}
-					notification.setLatestEventInfo(FetcherService.this, getString(R.string.rss_feeds), text, contentIntent);
-					notificationManager.notify(0, notification);
+//					if (ringtone != null && ringtone.length() > 0) {
+//						notification.sound = Uri.parse(ringtone);
+//					}
+//					notification.setLatestEventInfo(FetcherService.this, getString(R.string.rss_feeds), text, contentIntent);
+//					notificationManager.notify(0, notification);
 				} else {
-					notificationManager.cancel(0);
+//					notificationManager.cancel(0);
 				}
 			}
 		}
@@ -231,11 +230,11 @@ public class FetcherService extends IntentService {
 		
 		int result = 0;
 		
-		if (handler == null) {
-			handler = new RSSHandler(context);
-		}
-		handler.setEfficientFeedParsing(preferences.getBoolean(Strings.SETTINGS_EFFICIENTFEEDPARSING, true));
-		handler.setFetchImages(preferences.getBoolean(Strings.SETTINGS_FETCHPICTURES, false));
+//		if (handler == null) {
+//			handler = new RSSHandler(context);
+//		}
+//		handler.setEfficientFeedParsing(preferences.getBoolean(Strings.SETTINGS_EFFICIENTFEEDPARSING, true));
+//		handler.setFetchImages(preferences.getBoolean(Strings.SETTINGS_FETCHPICTURES, false));
 		
 		while(!destroyed && cursor.moveToNext()) {
 			String id = cursor.getString(idPosition);
@@ -253,7 +252,7 @@ public class FetcherService extends IntentService {
 				
 				int fetchMode = cursor.getInt(fetchmodePosition);
 				
-				handler.init(new Date(cursor.getLong(lastUpdatePosition)), id, cursor.getString(titlePosition), feedUrl);
+//				handler.init(new Date(cursor.getLong(lastUpdatePosition)), id, cursor.getString(titlePosition), feedUrl);
 				if (fetchMode == 0) {
 					if (contentType != null && contentType.startsWith(CONTENT_TYPE_TEXT_HTML)) {
 						BufferedReader reader = new BufferedReader(new InputStreamReader(getConnectionInputStream(connection)));
@@ -388,13 +387,13 @@ public class FetcherService extends IntentService {
 							
 							InputStream inputStream = getConnectionInputStream(connection);
 							
-							handler.setInputStream(inputStream);
-							Xml.parse(inputStream, Xml.findEncodingByName(index2 > -1 ?contentType.substring(index+8, index2) : contentType.substring(index+8)), handler);
+//							handler.setInputStream(inputStream);
+//							Xml.parse(inputStream, Xml.findEncodingByName(index2 > -1 ?contentType.substring(index+8, index2) : contentType.substring(index+8)), handler);
 						} else {
 							InputStreamReader reader = new InputStreamReader(getConnectionInputStream(connection));
 							
-							handler.setReader(reader);
-							Xml.parse(reader, handler);
+//							handler.setReader(reader);
+//							Xml.parse(reader, handler);
 						}
 						break;
 					}
@@ -416,7 +415,7 @@ public class FetcherService extends IntentService {
 						int start = xmlText != null ?  xmlText.indexOf(ENCODING) : -1;
 						
 						if (start > -1) {
-							Xml.parse(new StringReader(new String(ouputStream.toByteArray(), xmlText.substring(start+10, xmlText.indexOf('"', start+11)))), handler);
+//							Xml.parse(new StringReader(new String(ouputStream.toByteArray(), xmlText.substring(start+10, xmlText.indexOf('"', start+11)))), handler);
 						} else {
 							// use content type
 							if (contentType != null) {
@@ -429,16 +428,16 @@ public class FetcherService extends IntentService {
 									try {
 										StringReader reader = new StringReader(new String(ouputStream.toByteArray(), index2 > -1 ?contentType.substring(index+8, index2) : contentType.substring(index+8)));
 										
-										handler.setReader(reader);
-										Xml.parse(reader, handler);
+//										handler.setReader(reader);
+//										Xml.parse(reader, handler);
 									} catch (Exception e) {
 										
 									}
 								} else {
 									StringReader reader = new StringReader(new String(ouputStream.toByteArray()));
 									
-									handler.setReader(reader);
-									Xml.parse(reader, handler);
+//									handler.setReader(reader);
+//									Xml.parse(reader, handler);
 									
 								}
 							}
@@ -448,25 +447,25 @@ public class FetcherService extends IntentService {
 				}
 				connection.disconnect();
 			} catch (FileNotFoundException e) {
-				if (!handler.isDone() && !handler.isCancelled()) {
-					ContentValues values = new ContentValues();
-					values.put(FeedData.FeedColumns.FETCHMODE, 0); // resets the fetchmode to determine it again later
-					values.put(FeedData.FeedColumns.ERROR, context.getString(R.string.error_feederror));
-					context.getContentResolver().update(FeedData.FeedColumns.CONTENT_URI(id), values, null, null);
-				}
+//				if (!handler.isDone() && !handler.isCancelled()) {
+//					ContentValues values = new ContentValues();
+//					values.put(FeedData.FeedColumns.FETCHMODE, 0); // resets the fetchmode to determine it again later
+//					values.put(FeedData.FeedColumns.ERROR, context.getString(R.string.error_feederror));
+//					context.getContentResolver().update(FeedData.FeedColumns.CONTENT_URI(id), values, null, null);
+//				}
 			} catch (Throwable e) {
-				if (!handler.isDone() && !handler.isCancelled()) {
-					ContentValues values = new ContentValues();
-					values.put(FeedData.FeedColumns.FETCHMODE, 0); // resets the fetchmode to determine it again later
-					values.put(FeedData.FeedColumns.ERROR, e.getMessage());
-					context.getContentResolver().update(FeedData.FeedColumns.CONTENT_URI(id), values, null, null);
-				}
+//				if (!handler.isDone() && !handler.isCancelled()) {
+//					ContentValues values = new ContentValues();
+//					values.put(FeedData.FeedColumns.FETCHMODE, 0); // resets the fetchmode to determine it again later
+//					values.put(FeedData.FeedColumns.ERROR, e.getMessage());
+//					context.getContentResolver().update(FeedData.FeedColumns.CONTENT_URI(id), values, null, null);
+//				}
 			} finally {
 				if (connection != null) {
 					connection.disconnect();
 				}
 			}
-			result += handler.getNewCount();
+//			result += handler.getNewCount();
 		}
 		cursor.close();
 		
