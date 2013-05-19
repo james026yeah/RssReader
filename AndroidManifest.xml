@@ -3,7 +3,8 @@
     package="com.james026yeah.rssreader">
   <uses-permission android:name="android.permission.INTERNET" />
   <application android:label="RSS Reader">
-      <activity android:name=".ui.LoadingActivity">
+      <activity android:name=".ui.LoadingActivity"
+          android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />

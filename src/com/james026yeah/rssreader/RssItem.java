@@ -1,6 +1,5 @@
 package com.james026yeah.rssreader;
 
-import android.graphics.Bitmap;
 
 /**
  * Simple struct class to hold the data for one rss item --
